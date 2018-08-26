@@ -1,0 +1,41 @@
+{
+  "name": "serverless-postgraphile",
+  "version": "1.0.0",
+  "description": "Serverless GraphQL API - built using: NodeJS, Express, Serverless, Postgraphile",
+  "config": {
+    "PGLOCALCON": "postgresql://postgres@localhost:5432/forumexample",
+    "PGLOCALRUNCON": "postgresql://forum_example_postgraphql@localhost:5432/forumexample",
+    "PGLOCALINITCON": "postgresql://postgres@localhost:5432/"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "jest",
+    "init-local-db": "psql $npm_package_config_PGLOCALINITCON -f ./test_db/populateDB/initLocal.sql",
+    "local-server": "yarn run local-drop-rebuild;yarn run postgraphql-local",
+    "local-drop-rebuild": "yarn run drop-local-data;yarn run populate-local-schema;yarn run populate-local-data;",
+    "drop-local-data": "psql $npm_package_config_PGLOCALCON -f ./test_db/populateDB/drop.sql",
+    "populate-local-schema": "psql -d forumexample -f ./test_db/populateDB/schema.sql",
+    "populate-local-data": "psql -d forumexample -f ./test_db/populateDB/data.sql",
+    "postgraphql-local": "postgraphile -c $npm_package_config_PGLOCALRUNCON --schema forum_example --default-role forum_example_anonymous"
+  },
+  "jest": {
+    "verbose": true
+  },
+  "author": "Ryan Westby",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^6.0.0",
+    "express": "^4.16.3",
+    "pg": "^7.4.3",
+    "pg-pool": "^2.0.3",
+    "postgraphile": "^4.0.0-rc.3",
+    "serverless-dotenv-plugin": "^1.2.0",
+    "serverless-express": "^2.0.7",
+    "serverless-hooks-plugin": "^1.1.0",
+    "serverless-prune-plugin": "^1.3.1"
+  },
+  "devDependencies": {
+    "jest": "^23.5.0",
+    "supertest": "^3.1.0"
+  }
+}

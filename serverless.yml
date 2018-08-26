@@ -1,0 +1,41 @@
+service: serverless-postgraphile
+
+frameworkVersion: ">=1.24.0"
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: ${opt:region, self:custom.default.region}
+  stage: ${opt:stage, self:custom.default.stage}
+  timeout: 300
+  memorySize: 3008
+  versionFunctions: true
+  environment:
+    NODE_ENV: production
+
+plugins:
+  - serverless-express
+  - serverless-hooks-plugin
+  - serverless-prune-plugin
+  - serverless-dotenv-plugin
+
+functions:
+  graphql_handler:
+    handler: handler.handler
+    events:
+      - http:
+          path: /
+          method: POST
+
+custom:
+  default:
+      region: us-west-2
+      stage: dev
+
+  hooks:
+    before:package:createDeploymentArtifacts:
+      - sh hooks/create-introspection-cache.sh
+
+  prune:
+    automatic: true
+    number: 3
