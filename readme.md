@@ -140,4 +140,4 @@ Copy the endpoint, open GraphiQL.app and paste the url into the GraphQL Endpoint
 ## Additional Notes
 
 There is an article describing the project in detail here:
-http://westby.io/useful-serverless/
+http://westby.io/serverless-postgraphile/
